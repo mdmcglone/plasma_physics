@@ -1,0 +1,437 @@
+---
+title: "191_plasma_langmuir"
+author: "me"
+date: "9/23/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggthemes)
+library(tidyr)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r langmuir_15torr}
+
+dat1 <- read.csv('raw_data/ivsignflip_15torr_700v.csv') %>% 
+  head(42) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+
+   dat1 %>% #tail(24) %>% 
+     ggplot(aes(x = probe_voltage, y =  probe_current)) +
+       geom_point() +
+       geom_line() +
+     geom_smooth(method = 'lm')
+
+  
+  # dat2 <- read.csv('raw_data/ivfullrange_400torr_500v.csv') %>% 
+  # head(43) %>% 
+  # rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  # mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+  # 
+  #  dat2 %>% 
+  #    ggplot(aes(x = probe_voltage, y = probe_current)) +
+  #      geom_point() +
+  #      geom_line()
+   
+ dat1<- tail(dat1, 24)
+   
+   fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+ summary(fit1)
+
+
+```
+
+```{r langmuir_25torr}
+
+dat1 <- read.csv('raw_data/ivsignflip_25torr_500v.csv') %>% 
+  head(42) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+
+   dat1 %>% tail(18) %>% 
+     ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+       geom_point() +
+       geom_line() +
+     geom_smooth(method = 'lm')
+
+  
+  # dat2 <- read.csv('raw_data/ivfullrange_400torr_500v.csv') %>% 
+  # head(43) %>% 
+  # rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  # mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+  # 
+  #  dat2 %>% 
+  #    ggplot(aes(x = probe_voltage, y = probe_current)) +
+  #      geom_point() +
+  #      geom_line()
+   
+ dat1<- tail(dat1, 18)
+   
+   fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+ summary(fit1)
+
+
+```
+
+```{r langmuir_50torr}
+
+dat1 <- read.csv('raw_data/signflip_50torr_700v.csv') %>% 
+  head(51) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+
+   dat1 %>% tail(24) %>% 
+     ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+       geom_point() +
+       geom_line() +
+     geom_smooth(method = 'lm')
+
+  
+  # dat2 <- read.csv('raw_data/ivfullrange_400torr_500v.csv') %>% 
+  # head(43) %>% 
+  # rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  # mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+  # 
+  #  dat2 %>% 
+  #    ggplot(aes(x = probe_voltage, y = probe_current)) +
+  #      geom_point() +
+  #      geom_line()
+   
+ dat1<- tail(dat1, 24)
+   
+   fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+ summary(fit1)
+
+
+```
+
+
+
+```{r langmuir_100torr}
+
+dat1 <- read.csv('raw_data/ivsignflip_100torr_700v.csv') %>% 
+  head(45) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+
+ dat1 %>% tail(20) %>% 
+     ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+       geom_point() +
+       geom_line() +
+     geom_smooth(method = 'lm')
+
+  
+  # dat2 <- read.csv('raw_data/ivfullrange_100torr_700v.csv') %>% 
+  # head(44) %>% 
+  # rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  # mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+  # 
+  #  dat2 %>% 
+  #    ggplot(aes(x = probe_voltage, y = probe_current)) +
+  #      geom_point() +
+  #      geom_line()
+
+ 
+  dat1<- tail(dat1, 20)
+
+  fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+summary(fit1)
+
+# fit2 <- lm(log(probe_current) ~ probe_voltage, data = dat2)
+# summary(fit2)
+
+```
+
+```{r langmuir_200torr}
+
+dat1 <- read.csv('raw_data/ivsignflip_200torr_500v.csv') %>% 
+  head(46) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+
+  dat1 %>% tail(9) %>% 
+     ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+       geom_point() +
+       geom_line() +
+     geom_smooth(method = 'lm')
+
+  
+  # dat2 <- read.csv('raw_data/ivfullrange_200torr_500v.csv') %>% 
+  # head(29) %>% 
+  # rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  # mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+  # 
+  #  dat2 %>% 
+  #    ggplot(aes(x = probe_voltage, y = probe_current)) +
+  #      geom_point() +
+  #      geom_line()
+
+  dat1<- tail(dat1, 9)
+
+   fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+summary(fit1)
+
+# fit2 <- lm(log(probe_current) ~ probe_voltage, data = dat2)
+# summary(fit2)
+
+```
+
+```{r langmuir_400torr}
+
+dat1 <- read.csv('raw_data/ivsignflip_400torr_500v.csv') %>% 
+  head(42) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+
+ dat1 %>% tail(24) %>% 
+     ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+       geom_point() +
+       geom_line() +
+     geom_smooth(method = 'lm')
+
+  
+  # dat2 <- read.csv('raw_data/ivfullrange_400torr_500v.csv') %>% 
+  # head(29) %>% 
+  # rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  # mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+  # 
+  #  dat2 %>% 
+  #    ggplot(aes(x = probe_voltage, y = probe_current)) +
+  #      geom_point() +
+  #      geom_line()
+   
+ dat1<- tail(dat1, 24)
+   
+   fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+ summary(fit1)
+   
+```   
+
+```{r langmuir_800torr}
+
+dat1 <- read.csv('raw_data/ivsignflip_800torr_900v.csv') %>% 
+  head(42) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+
+ 
+
+   dat1 %>% tail(19) %>% 
+     ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+       geom_point() +
+       geom_line() +
+     geom_smooth(method = 'lm') + 
+  theme_classic() +
+     labs(x = 'Probe Voltage Applied (V)', y = 'Probe Current (mA)',
+          title = 'Linear Fit of Langmuir Probe Sign Flip for Argon') +
+          theme(text = element_text(size = 16))
+
+   
+   
+   
+   dat1 %>% tail(41) %>% 
+     ggplot(aes(x = probe_voltage, y =  probe_current)) +
+       geom_point() +
+       geom_line() + 
+  theme_classic() +
+     labs(x = 'Probe Voltage Applied (V)', y = 'Probe Current (mA)',
+          title = 'Langmuir Probe Voltage vs. Current for Argon',
+          subtitle = 'Zoomed in on current sign flip') +
+       theme(text = element_text(size = 16))
+
+       
+   dat2 <- read.csv('raw_data/ivfullrange_800torr_900v.csv') %>% 
+   head(29) %>% 
+
+   rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+   mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+  # 
+   dat2 %>% 
+      ggplot(aes(x = probe_voltage, y = probe_current)) +
+        geom_point() +
+        geom_line() +
+  theme_classic() + 
+     labs(x = 'Probe Voltage Applied (V)', y = 'Probe Current (mA)',
+          title = 'Langmuir Probe Voltage vs. Current for Argon')+
+     scale_y_continuous(labels = scales::scientific) +
+     scale_x_continuous(breaks = seq(-160,0,20)) +
+          theme(text = element_text(size = 16))
+
+       
+
+   
+   dat1<- tail(dat1, 25)
+ fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+ summary(fit1)
+   
+
+# fit2 <- lm(log(probe_current) ~ probe_voltage, data = dat2)
+# summary(fit2)
+
+
+  
+```
+
+```{r langmuir_1200torr}
+
+ dat1 <- read.csv('raw_data/ivsignflip_1200torr_900v.csv') %>% 
+   head(42) %>% 
+   rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+   mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+ 
+    dat1 %>% tail(30) %>% 
+      ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+        geom_point() +
+        geom_line() +
+      geom_smooth(method = 'lm')
+
+  
+   # dat2 <- read.csv('raw_data/ivfullrange_1800torr_1000v.csv') %>% 
+   # head(32) %>% 
+   # rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+   # mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+   # 
+   #  dat2 %>%  tail(20) %>% 
+   #    ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+   #      geom_point() +
+   #      geom_line() +
+   #    geom_smooth(method = 'lm')
+    
+    
+dat1<- tail(dat1, 30)
+
+
+ fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+ summary(fit1)
+
+ # fit2 <- lm(log(probe_current) ~ probe_voltage, data = dat2)
+ # summary(fit2)
+
+   
+  
+```
+
+```{r langmuir_1600torr}
+
+dat1 <- read.csv('raw_data/ivsignflip_1600torr_1000v.csv') %>% 
+  head(42) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+
+   dat1 %>% tail(17) %>% 
+     ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+       geom_point() +
+       geom_line() +
+     geom_smooth(method = 'lm')
+
+  
+  # dat2 <- read.csv('raw_data/ivfullrange_1600torr_1000v.csv') %>% 
+  # head(22) %>% 
+  # rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  # mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+  # 
+  #  dat2 %>% 
+  #    ggplot(aes(x = probe_voltage, y = probe_current)) +
+  #      geom_point() +
+  #      geom_line()  
+  
+dat1<- tail(dat1, 17)
+
+  view(dat1)
+
+   
+ fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+ summary(fit1)
+# 
+# fit2 <- lm(log(probe_current) ~ probe_voltage, data = dat2)
+# summary(fit2)
+
+   
+  
+```
+
+
+```{r langmuir_1800torr}
+
+ dat1 <- read.csv('raw_data/ivsignflip_1800torr_1000v.csv') %>% 
+   head(42) %>% 
+   rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+   mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+ 
+    dat1 %>% tail(30) %>% 
+      ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+        geom_point() +
+        geom_line() +
+      geom_smooth(method = 'lm')
+
+  
+   # dat2 <- read.csv('raw_data/ivfullrange_1800torr_1000v.csv') %>% 
+   # head(32) %>% 
+   # rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+   # mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+   # 
+   #  dat2 %>%  tail(20) %>% 
+   #    ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+   #      geom_point() +
+   #      geom_line() +
+   #    geom_smooth(method = 'lm')
+    
+    
+dat1<- tail(dat1, 30)
+
+
+ fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+ summary(fit1)
+
+ # fit2 <- lm(log(probe_current) ~ probe_voltage, data = dat2)
+ # summary(fit2)
+
+   
+  
+```
+
+
+
+
+
+```{r  temperature_charts}
+temp1 <- tibble(pressure = c(25, 50,100,200,400,800,1200,1600,1800), temperature = c(43891.70547,
+58279.995,82911.57212,41180.11045,67857.367,26583.363,33591.82252,20278.477,30416.28075))
+
+temp1 %>% 
+  ggplot(aes(x = pressure, y = temperature)) + 
+  geom_point(size = 3) + 
+  geom_line() + 
+  labs(x = 'Pressure (mTorr)', y = 'Temperature (K)',
+       title = 'Pressure vs. Temperature for Argon Plasma') +
+  theme_classic() +
+  scale_x_continuous(breaks = seq(0,2000, 250)) +
+  theme(text = element_text(size = 16))
+
+temp2 <- tibble(pressure = c(25, 50,100,200,400,800,1200,1600,1800), temperature = c(61865.1142,64783.3585,54157.95633,28830.64013,33385.9808,35727.378,35348.666,47747.241, 38770.45661))
+
+temp2 %>% 
+  ggplot(aes(x = pressure, y = temperature)) + 
+  geom_point(size = 3) + 
+  geom_line() + 
+  labs(x = 'Pressure (mTorr)', y ='Temperature (K)',
+       title = 'Pressure vs. Temperature for Helium Plasma') +
+  theme_classic() +
+  scale_x_continuous(breaks = seq(0,2000, 250)) + 
+  theme(text = element_text(size = 16))
+
+
+
+
+
+
+```

@@ -1,0 +1,512 @@
+---
+title: "plasma_helium_stuff"
+author: "me"
+date: "9/30/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggthemes)
+library(tidyr)
+```
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+```{r spectroscopy_helium}
+
+
+spectrum1 <- read.csv('raw_data/helium_spectrum_anode_800mt_600v.csv') %>% 
+  mutate(wavelength = as.numeric(wavelength),
+         intensity = as.numeric(intensity)) 
+
+spectrum2 <- read.csv('raw_data/helium_spectrum_cathode_800mt_600v.csv') %>% 
+  mutate(wavelength = as.numeric(wavelength),
+         intensity = as.numeric(intensity)) 
+
+spectrum <- full_join(spectrum1, spectrum2)
+
+spectrum %>% 
+  ggplot(aes(x = wavelength, y = intensity)) + 
+    geom_col() + 
+    geom_vline(xintercept = 388.86, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 402.62, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 412.08, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 447.15, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 471.31, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 492.19, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 501.57, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 504.77, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 587.56, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 667.82, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 706.52, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 728.13, color = 'blue', alpha = .25) +
+######
+    theme_classic()
+
+```
+
+
+
+```{r spectroscopy_helium_2}
+
+
+spectrum1 <- read.csv('raw_data/helium_spectrum_anode_200mt_700v.csv') %>% 
+  mutate(wavelength = as.numeric(wavelength),
+         intensity = as.numeric(intensity)) 
+
+spectrum2 <- read.csv('raw_data/helium_spectrum_cathode_200mt_700v.csv') %>% 
+  mutate(wavelength = as.numeric(wavelength),
+         intensity = as.numeric(intensity)) 
+
+spectrum <- full_join(spectrum1, spectrum2)
+
+#view(spectrum1 %>% filter(intensity > 12))
+
+spectrum1 %>% 
+  ggplot(aes(x = wavelength, y = intensity)) + 
+    geom_col() + 
+    geom_vline(xintercept = 388.86, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 402.62, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 412.08, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 447.15, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 471.31, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 492.19, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 501.57, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 504.77, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 587.56, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 667.82, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 706.52, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 728.13, color = 'blue', alpha = .25) +
+######
+  theme_classic() +
+    labs(x = 'Wavelength (nm)', y = 'Intensity (counts)',
+         title = 'Helium Plasma Anode Emission Spectrum') +
+theme(text = element_text(size = 16)) + 
+  xlim(350,750)
+```
+
+
+```{r spectroscopy_helium_3}
+
+
+spectrum1 <- read.csv('raw_data/helium_spectrum_100mt_1100v.csv') %>% 
+  mutate(wavelength = as.numeric(wavelength),
+         intensity = as.numeric(intensity)) 
+
+spectrum1 %>% 
+  ggplot(aes(x = wavelength, y = intensity)) + 
+    geom_col() + 
+    geom_vline(xintercept = 388.86, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 402.62, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 412.08, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 447.15, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 471.31, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 492.19, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 501.57, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 504.77, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 587.56, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 667.82, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 706.52, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 728.13, color = 'blue', alpha = .25) +
+    theme_bw()
+
+```
+
+
+```{r langmuir_15torr}
+
+dat1 <- read.csv('raw_data/ivsignflip_15torr_1500v_he.csv') %>% 
+  head(41) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+
+   dat1 %>% tail(28) %>% 
+     ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+       geom_point() +
+       geom_line() +
+     geom_smooth(method = 'lm')
+
+ dat1<- tail(dat1, 28)
+   
+   fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+ summary(fit1)
+
+
+```
+
+
+```{r langmuir_25torr}
+
+dat1 <- read.csv('raw_data/ivsignflip_25torr_1500v_he.csv') %>% 
+  head(41) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+
+   dat1 %>% tail(30) %>% 
+     ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+       geom_point() +
+       geom_line() +
+     geom_smooth(method = 'lm')
+
+ dat1<- tail(dat1, 30)
+   
+   fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+ summary(fit1)
+
+
+```
+```{r langmuir_50torr}
+
+dat1 <- read.csv('raw_data/ivsignflip_50torr_600v_he.csv') %>% 
+  head(41) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+
+   dat1 %>% tail(27) %>% 
+     ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+       geom_point() +
+       geom_line() +
+     geom_smooth(method = 'lm')
+
+ dat1<- tail(dat1, 27)
+   
+   fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+ summary(fit1)
+
+
+```
+
+```{r langmuir_100torr}
+
+dat1 <- read.csv('raw_data/ivsignflip_100torr_600v_he.csv') %>% 
+  head(39) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current)) %>% view()
+
+   dat1 %>% tail(22) %>% 
+     ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+       geom_point() +
+       geom_line() +
+     geom_smooth(method = 'lm')
+
+ dat1<- tail(dat1, 22)
+   
+   fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+ summary(fit1)
+
+
+```
+
+
+```{r langmuir_200torr}
+
+dat1 <- read.csv('raw_data/ivsignflip_200torr_600v_he.csv') %>% 
+  head(41) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current)) %>% view()
+
+   dat1 %>% tail(28) %>% 
+     ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+       geom_point() +
+       geom_line() +
+     geom_smooth(method = 'lm')
+
+ dat1<- tail(dat1, 28)
+   
+   fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+ summary(fit1)
+
+
+```
+
+
+```{r langmuir_400torr}
+
+dat1 <- read.csv('raw_data/ivsignflip_400torr_600v_he.csv') %>% 
+  head(41) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current)) 
+
+dat1 %>% 
+  ggplot(aes(x = probe_voltage, y =  probe_current)) +
+  geom_point() +
+  geom_line()
+
+   dat1 %>% tail(19) %>% 
+     ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+       geom_point() +
+       geom_line() +
+     geom_smooth(method = 'lm')
+
+ dat1<- tail(dat1, 19)
+   
+   fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+ summary(fit1)
+
+
+```
+
+
+
+```{r langmuir_800torr}
+
+dat1 <- read.csv('raw_data/ivsignflip_800torr_600v_he.csv') %>% 
+  head(41) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current)) 
+
+dat1 %>% tail(40) %>% 
+  ggplot(aes(x = probe_voltage, y =  probe_current)) +
+  geom_point() +
+  geom_line()+ 
+  theme_classic() +
+     labs(x = 'Probe Voltage Applied (V)', y = 'Probe Current (mA)',
+          title = 'Langmuir Probe Voltage vs. Current for Helium',
+          subtitle = 'Zoomed in on current sign flip') + 
+  theme(text = element_text(size = 16))
+
+   dat1 %>% tail(14) %>% 
+     ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+       geom_point() +
+       geom_line() +
+     geom_smooth(method = 'lm')  + theme_classic() +
+     labs(x = 'Probe Voltage Applied (V)', y = 'Probe Current (mA)',
+          title = 'Linear Fit of Langmuir Probe Sign Flip for Helium') +
+     theme(text = element_text(size = 16))
+   
+   
+   dat2 <- read.csv('raw_data/ivfullrange_800torr_600v_he.csv') %>% 
+  head(44) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current)) 
+   
+   dat2 %>% 
+      ggplot(aes(x = probe_voltage, y = probe_current)) +
+        geom_point() +
+        geom_line() +
+  theme_classic() + 
+     labs(x = 'Probe Voltage Applied (V)', y = 'Probe Current (mA)',
+          title = 'Langmuir Probe Voltage vs. Current for Helium') +
+   scale_y_continuous(labels = scales::scientific) +
+     scale_x_continuous(breaks = seq(-200,10,20)) +
+     theme(text = element_text(size = 16))
+
+
+ dat1<- tail(dat1, 15)
+   
+   fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+ summary(fit1)
+
+
+```
+
+```{r langmuir_1200torr}
+
+dat1 <- read.csv('raw_data/ivsignflip_1200torr_400v_he.csv') %>% 
+  head(41) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current)) 
+
+dat1 %>% 
+  ggplot(aes(x = probe_voltage, y =  probe_current)) +
+  geom_point() +
+  geom_line()
+
+   dat1 %>% tail(28) %>% 
+     ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+       geom_point() +
+       geom_line() +
+     geom_smooth(method = 'lm')
+
+ dat1<- tail(dat1, 28)
+   
+   fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+ summary(fit1)
+
+
+```
+
+
+
+```{r langmuir_1600torr}
+
+dat1 <- read.csv('raw_data/ivsignflip_1600torr_600v_he.csv') %>% 
+  head(41) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current)) 
+
+dat1 %>% 
+  ggplot(aes(x = probe_voltage, y =  probe_current)) +
+  geom_point() +
+  geom_line()
+
+   dat1 %>% tail(29) %>% 
+     ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+       geom_point() +
+       geom_line() +
+     geom_smooth(method = 'lm')
+
+ dat1<- tail(dat1, 29)
+   
+   fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+ summary(fit1)
+
+
+```
+
+
+```{r langmuir_1800torr}
+
+dat1 <- read.csv('raw_data/ivsignflip_800torr_600v_he.csv') %>% 
+  head(41) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current)) 
+
+   dat1 %>% tail(19) %>% 
+     ggplot(aes(x = probe_voltage, y =  log(probe_current))) +
+       geom_point() +
+       geom_line() +
+     geom_smooth(method = 'lm')
+
+ dat1<- tail(dat1, 19)
+   
+   fit1 <- lm(log(probe_current) ~ probe_voltage, data = dat1)
+ summary(fit1)
+
+
+```
+
+
+
+
+```{r paschen_curves}
+helium_paschen <- tibble(pressure = c(15,25,50,100,200,400,800,1200,1600,1800), bvoltage = c(1401.136,905.546,484.774,360.45, 319.181, 321.466, 325.367, 348.354, 361.387, 369.668))
+
+argon_paschen <- tibble(pressure = c(15,25,50,100,200,400,800,1200,1600,1800), bvoltage = c(426.172, 389.573, 364.596, 364.51, 379.74, 441.176, 636.367, 717.609, 765.856, 941.772))
+
+argon_paschen %>%
+  ggplot(aes(x = pressure*12.5/1000, y = bvoltage)) +
+  geom_point() +
+  geom_line() + 
+  scale_x_log10() +
+  scale_y_log10(limits = c(100, 3000)) + 
+  geom_function(fun = ~ (180*.x)/(log(12*.x) - 1.369), color = 'red') + #ar
+  labs(x = 'Pressure*Diode Separation (mTorr*Cm)', y = 'Breakdown Voltage (Volts)', title = 'Paschen Curve for Argon') +
+    theme_classic() +
+            theme(text = element_text(size = 16))
+
+
+
+helium_paschen %>%
+  ggplot(aes(x = pressure*12.5/1000, y = bvoltage)) +
+  geom_point() +
+  geom_line() + 
+  scale_x_log10() +
+  scale_y_log10(limits = c(100, 3000)) + 
+  geom_function(fun = ~ (34*.x)/(log(3*.x) - 1.369), color = 'red') + #he
+  labs(x = 'Pressure*Diode Separation (mTorr*Cm)', y = 'Breakdown Voltage (Volts)', title = 'Paschen Curve for Helium') +
+  theme_classic() +
+  theme(text = element_text(size = 16))
+
+  
+
+```
+
+
+
+
+
+
+
+
+```{r spectral_temp_helium_cathode}
+
+spectral_temp <- tibble(ek = c(23.00707347,24.04266382,23.97197174,23.73609296,23.73633536,23.08701885,23.67357091,23.07365134,23.07407512,22.71846674,22.92031768), ek_div_temp = c(0.0005546979184,0.0003325623093,0.0006230233618,0.0004546699105,0.0006662707731,0.0005651668351,0.0006144254006,0.00071645821,0.0007509883449,0.000677420653,0.0007292233238))
+
+spectral_temp %>% 
+  ggplot(aes(x = ek, y = ek_div_temp)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se = FALSE) +
+labs(x = 'Known E[k] (eV)', y = 'Experimental E[k] (eV/K)', 
+     title = 'Helium Cathode Temperature through Spectroscopy') +
+  theme_classic() +
+    scale_x_continuous(breaks = seq(22, 25, .25)) +
+       scale_y_continuous(labels = scales::scientific) +
+  theme(text = element_text(size = 16)) 
+
+
+
+   fit1 <- lm(ek_div_temp ~ ek, data = spectral_temp)
+ summary(fit1)
+
+
+```
+```{r spectral_temp_helium_anode}
+
+spectral_temp <- tibble(ek = c(24.4193361,24.20916416,24.04266382,23.73633536,23.07365134,24.37116797), ek_div_temp = c(0.00008990600992,0.0001987962465,0.0003006975988,0.0007713137206,0.0007904264468,0.0002988747063))
+
+spectral_temp %>% 
+  ggplot(aes(x = ek, y = ek_div_temp)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se = FALSE) +
+labs(x = 'Known E[k] (eV)', y = 'Experimental E[k] (eV/K)', 
+     title = 'Helium Anode Temperature through Spectroscopy') +
+  theme_classic() +
+    scale_x_continuous(breaks = seq(23, 25, .25)) +
+         scale_y_continuous(labels = scales::scientific)+
+    theme(text = element_text(size = 16)) 
+
+  
+
+  
+
+   fit1 <- lm(ek_div_temp ~ ek, data = spectral_temp)
+ summary(fit1)
+
+
+```
+
+```{r spectral_temp_argon_anode}
+
+spectral_temp <- tibble(ek = c(15.0603901,15.0603901,14.68711824,14.6882903,14.46399577,14.5249133,14.46399577,14.97152236,15.02208834,13.2730381,14.74), ek_div_temp = c(0.0003154538483,0.0003032807457,0.0001319615887,0.0003635349771,0.0001983695814,0.0001984218344,0.0001505042857,0.000254661073,0.0001587343079,0.0006305893678,0.0001543904702))
+
+spectral_temp %>% 
+  ggplot(aes(x = ek, y = ek_div_temp)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se = FALSE) +
+  labs(x = 'Known E[k] (eV)', y = 'Experimental E[k] (eV/K)', 
+     title = 'Argon Anode Temperature through Spectroscopy') +
+  theme_classic()+
+    scale_x_continuous(breaks = seq(13, 15, .25)) +
+      theme(text = element_text(size = 16)) 
+
+
+   fit1 <- lm(ek_div_temp ~ ek, data = spectral_temp)
+ summary(fit1)
+
+
+```
+
+```{r spectral_temp_argon_cathode}
+
+spectral_temp <- tibble(ek = c(14.6882903,14.49905364,14.5249133,15.585975,14.97152236,13.32785705,14.84836899,14.84836899,13.2730381,13.1717777,13.3,13.28263902,13.09487256,13.07571571,13.09487256,12.9070153), ek_div_temp = c(0.0003820624597,0.0005007310057,0.0004381921606,0.0001880796772,0.0002503943144,0.0005089696178,0.0004241113595,0.0002895479931,0.0004514213462,0.0005301929455,0.0005282801064,0.0006063583195,0.0005441576824,0.0005840662749,0.0005874551271,0.0006255297878))
+
+spectral_temp %>% 
+  ggplot(aes(x = ek, y = ek_div_temp)) +
+  geom_point() +
+  geom_smooth(method = 'lm', se = FALSE) +
+  labs(x = 'Known E[k] (eV)', y = 'Experimental E[k] (eV/K)', 
+     title = 'Argon Cathode Temperature through Spectroscopy') +
+  theme_classic() +
+    scale_x_continuous(breaks = seq(12, 16, .25)) +
+        theme(text = element_text(size = 16)) 
+
+
+   fit1 <- lm(ek_div_temp ~ ek, data = spectral_temp)
+ summary(fit1)
+
+
+```

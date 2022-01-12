@@ -1,0 +1,436 @@
+---
+title: "191_Experiment1_graphing"
+author: "me"
+date: "9/9/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggthemes)
+library(tidyr)
+
+library(lubridate)
+library(ggplot2)
+
+
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r langmuir_iv_test}
+dat <- read.csv('test4.csv') %>% 
+  head(43) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+
+  dat %>% 
+    ggplot(aes(x = probe_voltage, y = probe_current)) +
+      geom_point() +
+      geom_line()
+  view(dat)
+  
+  #~230 mtorr
+
+```
+
+```{r tank_iv_test}
+
+view(read.csv('test4.csv'))
+
+data <- read.csv('test4.csv') %>% 
+  tail(481) %>% 
+  select(probe.voltage..V.) %>% 
+  separate(col = probe.voltage..V., into = c("current", "voltage", "time"), sep = "\t") %>% 
+  mutate(voltage = -as.numeric(voltage),
+         current = as.numeric(current)) 
+
+data %>% 
+  ggplot(aes(x = voltage, y = current)) + 
+  geom_point() +
+  geom_smooth()
+
+  #~230 mtorr
+
+
+```
+
+
+
+```{r spectroscopy_argon}
+
+
+spectrum1 <- read.csv('spectrum_low_range.csv') %>% 
+  mutate(wavelength = as.numeric(wavelength),
+         intensity = as.numeric(intensity)) 
+
+
+
+spectrum2 <- read.csv('spectrum_high_range.csv') %>% 
+  mutate(wavelength = as.numeric(wavelength),
+         intensity = as.numeric(intensity)) 
+
+spectrum <- full_join(spectrum1, spectrum2)
+
+spectrum1 %>% 
+  ggplot(aes(x = wavelength, y = intensity)) + 
+    geom_col() + 
+    geom_vline(xintercept = 394.9, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 415.86, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 420.07, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 427.22, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 545.17, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 573.95, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 603.21, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 675.28, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 687.13, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 696.54, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 703.3, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 706.72, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 720.70, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 737.21, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 738.4, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 750.39, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 751.47, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 763.51, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 794.82, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 800.62, color = 'blue', alpha = .25) +
+  geom_vline(xintercept = 801.37, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 810.37, color = 'blue', alpha = .25) +
+  geom_vline(xintercept = 811.53, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 826.45, color = 'blue', alpha = .25) +
+    theme_classic() +
+    labs(x = 'Wavelength (nm)', y = 'Intensity (counts)',
+         title = 'Argon Plasma Cathode Emission Spectrum')+
+          theme(text = element_text(size = 16)) +
+  xlim(350,850)
+
+
+
+   
+# spectrum1 %>% 
+#   ggplot(aes(x = wavelength, y = intensity)) + 
+#   geom_col() + 1
+#   theme_classic()
+# 
+#   #~201 mtorr
+# 
+# spectrum2 %>% 
+#   ggplot(aes(x = wavelength, y = intensity)) + 
+#   geom_col() +
+#   theme_classic()
+
+
+  #~203 mtorr
+#500v
+#view(spectrum2 %>% filter(intensity > 20))
+
+```
+
+
+```{r spectroscopy_argon_2}
+
+
+spectrum1 <- read.csv('spectrum_anode_highpressure.csv') %>% 
+  mutate(wavelength = as.numeric(wavelength),
+         intensity = as.numeric(intensity)) 
+
+
+spectrum2 <- read.csv('spectrum_cathode_highpressure.csv') %>% 
+  mutate(wavelength = as.numeric(wavelength),
+         intensity = as.numeric(intensity)) 
+
+spectrum <- full_join(spectrum1, spectrum2)
+
+spectrum1 %>% 
+  ggplot(aes(x = wavelength, y = intensity)) + 
+    geom_col() + 
+    geom_vline(xintercept = 394.9, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 415.86, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 420.07, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 427.22, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 545.17, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 573.95, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 603.21, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 675.28, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 687.13, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 696.54, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 703.3, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 706.72, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 720.70, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 737.21, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 738.4, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 750.39, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 751.47, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 763.51, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 794.82, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 800.62, color = 'blue', alpha = .25) +
+  geom_vline(xintercept = 801.37, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 810.37, color = 'blue', alpha = .25) +
+  geom_vline(xintercept = 811.53, color = 'blue', alpha = .25) +
+    geom_vline(xintercept = 826.45, color = 'blue', alpha = .25) +
+######
+    theme_classic() +
+    labs(x = 'Wavelength (nm)', y = 'Intensity (counts)',
+         title = 'Argon Plasma Anode Emission Spectrum',
+         subtitle = 'Blue lines represent the known spectral lines of Argon',
+         caption = 'Plasma maintained at 800 mTorr and 900 Volts')
+
+
+   
+# spectrum1 %>% 
+#   ggplot(aes(x = wavelength, y = intensity)) + 
+#   geom_col() + 
+#   theme_classic()
+# 
+#   #~800 mtorr
+# 
+# spectrum2 %>% 
+#   ggplot(aes(x = wavelength, y = intensity)) + 
+#   geom_col() +
+#   theme_classic()
+
+
+  #~800 mtorr
+```
+
+```{r langmuir_50torr}
+
+dat1 <- read.csv('raw_data/signflip_50torr_700v.csv') %>% 
+  head(51) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+
+   dat1 %>% 
+     ggplot(aes(x = probe_voltage, y = probe_current)) +
+       geom_point() +
+       geom_line()
+
+  
+  dat2 <- read.csv('raw_data/fullrange_50torr_800v.csv') %>% 
+  head(43) %>% 
+  rename(probe_voltage = probe.voltage..V., probe_current = probe.current..A.)  %>% 
+  mutate(probe_voltage = as.numeric(probe_voltage), probe_current = as.numeric(probe_current))
+
+   dat2 %>% 
+     ggplot(aes(x = probe_voltage, y = probe_current)) +
+       geom_point() +
+       geom_line()
+
+
+```
+
+
+```{r paschen_50torr}
+
+#view(read.csv('raw_data/paschem_breakdown_50torr.csv'))
+
+dat1 <- read.csv('raw_data/paschem_breakdown_50torr.csv') %>% 
+  separate(col = X0.004299..12.964960.19.402000, into = c("current", "voltage", "time"), sep = "\t") %>% 
+  mutate(voltage = as.numeric(voltage),
+         current = as.numeric(current),
+         time = as.numeric(time)) 
+
+dat1 %>% 
+   ggplot(aes(x = -voltage, y = current)) + 
+  geom_point() + xlim(350,380) 
+
+view(dat1)
+```
+
+```{r paschen_100torr}
+
+#view(read.csv('raw_data/paschem_breakdown_100torr.csv'))
+
+dat1 <- read.csv('raw_data/paschem_breakdown_100torr.csv') %>% 
+  separate(col = X.0.000092..13.467147.8.747000, into = c("current", "voltage", "time"), sep = "\t") %>% 
+  mutate(voltage = as.numeric(voltage),
+         current = as.numeric(current),
+         time = as.numeric(time)) 
+
+dat1 %>% 
+   ggplot(aes(x = -voltage, y = current)) + 
+  geom_point() + xlim(320,370) 
+
+view(dat1)
+
+```
+```{r paschen_200torr}
+
+#view(read.csv('raw_data/paschem_breakdown_200torr.csv'))
+
+dat1 <- read.csv('raw_data/paschem_breakdown_200torr.csv') %>% 
+  separate(col = X0.005379..2.960968.23.020000, into = c("current", "voltage", "time"), sep = "\t") %>% 
+  mutate(voltage = as.numeric(voltage),
+         current = as.numeric(current),
+         time = as.numeric(time)) 
+
+dat1 %>% 
+   ggplot(aes(x = -voltage, y = current)) + 
+  geom_point() + xlim(300,335) 
+
+view(dat1)
+
+
+```
+
+```{r paschen_400torr}
+
+#view(read.csv('raw_data/paschem_breakdown_400torr.csv'))
+
+dat1 <- read.csv('raw_data/paschem_breakdown_400torr.csv') %>% 
+  separate(col = X.0.001972..3.466537.9.505000, into = c("current", "voltage", "time"), sep = "\t") %>% 
+  mutate(voltage = as.numeric(voltage),
+         current = as.numeric(current),
+         time = as.numeric(time)) 
+
+dat1 %>% 
+   ggplot(aes(x = -voltage, y = current)) + 
+  geom_point() + xlim(300,350) 
+
+view(dat1)
+
+```
+
+```{r paschen_800torr}
+
+#view(read.csv('raw_data/paschen_breakdown_800torr.csv'))
+
+dat1 <- read.csv('raw_data/paschen_breakdown_800torr.csv') %>% 
+  separate(col = X3.141056..397.343250.6.076000, into = c("current", "voltage", "time"), sep = "\t") %>% 
+  mutate(voltage = as.numeric(voltage),
+         current = as.numeric(current),
+         time = as.numeric(time)) 
+
+dat1 %>% 
+   ggplot(aes(x = -voltage, y = current)) + 
+  geom_point() + xlim(335,380) 
+
+view(dat1)
+
+```
+
+
+```{r paschen_1200torr}
+
+view(read.csv('raw_data/paschen_breakdown_1200torr.csv'))
+
+dat1 <- read.csv('raw_data/paschen_breakdown_1200torr.csv') %>% 
+  separate(col = X.0.005333..3.802648.8.608000, into = c("current", "voltage", "time"), sep = "\t") %>% 
+  mutate(voltage = as.numeric(voltage),
+         current = as.numeric(current),
+         time = as.numeric(time)) 
+
+dat1 %>% 
+   ggplot(aes(x = -voltage, y = current)) + 
+  geom_point() + xlim(350,425) 
+
+view(dat1)
+
+```
+
+```{r paschen_1600torr}
+
+#view(read.csv('raw_data/paschen_breakdown_1600torr.csv'))
+
+dat1 <- read.csv('raw_data/paschen_breakdown_1600torr.csv') %>% 
+  separate(col = X0.001058..3.710170.11.792000, into = c("current", "voltage", "time"), sep = "\t") %>% 
+  mutate(voltage = as.numeric(voltage),
+         current = as.numeric(current),
+         time = as.numeric(time)) 
+
+
+dat1 %>% 
+   ggplot(aes(x = -voltage, y = current)) + 
+   geom_point() +
+   xlim(300,375)
+
+view(dat1)
+
+```
+
+```{r paschen_1800torr}
+
+view(read.csv('raw_data/paschen_breakdown_1800torr.csv'))
+
+dat1 <- read.csv('raw_data/paschen_breakdown_1800torr.csv') %>% 
+  separate(col = X0.006049..3.439872.8.280000, into = c("current", "voltage", "time"), sep = "\t") %>% 
+  mutate(voltage = as.numeric(voltage),
+         current = as.numeric(current),
+         time = as.numeric(time)) 
+
+dat1 %>% 
+   ggplot(aes(x = -voltage, y = current)) + 
+  geom_point() + xlim(400,475) 
+
+view(dat1)
+
+```
+
+
+
+```{r paschen_overall}
+
+paschen <- tibble(pressure = c(15,25,50,100,200,400,800,1200,1600,1800), bvoltage = c(426.172, 389.573, 364.596,364.5101,379.7404,441.1755,636.367,717.6085,765.856, 941.7719))
+
+paschen %>% 
+  ggplot(aes(x = pressure*12.5/1000, y = bvoltage)) +
+  geom_point() +
+  geom_line() + 
+  scale_x_log10() +
+  scale_y_log10(limits = c(100,10e3)) + 
+  geom_function(fun = ~ (180*.x)/(log(12*.x) - 1.369), color = 'red')  #ar
+
+
+
+
+
+```
+
+
+
+
+
+
+```{r hysterisis}
+hyst_compare <- tibble(pressure  = c(15,25,50,100,200,400,800,1200,1600,1800),
+                       v_up = c(426.172,389.573, 364.596,364.5101,379.7404,441.1755,636.367,717.6085,765.856,941.7719),
+                       v_down = c(424.16947,386.861079,362.663,327.758,306.807,304.7808,341.225,370.602,319.755,420.9226))
+hyst_compare %>% 
+ggplot(aes(x = pressure)) +
+  geom_point(aes(y = v_up), color = 'blue', size = 3)+
+    geom_line(aes(y = v_up), color = 'blue')+
+    geom_point(aes(y = v_down), color = 'red', size = 3)+
+    geom_line(aes(y = v_down), color = 'red')+
+    labs(title = 'Rising and Falling Breakdown Voltage for Argon',
+         subtitle = 'Demonstrating hysteresis in Paschen\'s Law',
+       x = 'Pressure (mTorr)',
+       y = 'Breakdown Voltage (V)') +
+  theme_classic() +
+     theme(text = element_text(size = 16)) 
+
+##800v Argonee
+
+
+
+# hyst_single <- read.csv('raw_data/paschem_breakdown_400torr.csv') %>% 
+#   separate(col = X.0.001972..3.466537.9.505000, into = c("current", "voltage", "time"), sep = "\t") %>% 
+#   mutate(voltage = as.numeric(voltage),
+#          current = as.numeric(current),
+#          time = as.numeric(time)) 
+
+# hyst_single %>% 
+#    ggplot(aes(x = -voltage, y = current)) + 
+#   geom_point() + xlim(300,450) +
+#   geom_path() +
+#   theme_classic()
+
+
+
+
+```
